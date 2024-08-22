@@ -8,6 +8,4 @@ data class Role(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     val name: String
-) {
-    constructor() : this(null, "")
-}
+)

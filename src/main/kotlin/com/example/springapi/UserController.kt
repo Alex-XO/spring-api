@@ -1,8 +1,5 @@
 package com.example.springapi
 
-import jakarta.websocket.server.PathParam
-import org.springframework.stereotype.Controller
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -16,19 +13,19 @@ class UserController(
     }
 
     @PostMapping("/users")
-    fun addUser(@RequestParam username: String, @RequestParam password: String, @RequestParam role: String): User {
-        val userRole = roleRepository.findByName(role) ?: throw IllegalArgumentException("Invalid role")
-        val user = User(username = username, password = password, enabled = true, role = userRole)
+    fun addUser(@RequestBody request: CreateUserRequest): String {
+        val userRole = roleRepository.findByName(request.role) ?: throw IllegalArgumentException("Invalid role")
+        val user = User(username = request.username, password = request.password, enabled = true, role = userRole)
         userRepository.save(user)
-        return user
+        return "User ${request.username} created successfully!"
     }
 
     @PutMapping("/users/{id}")
-    fun updateUser(@PathVariable id: Long, @RequestParam username: String, @RequestParam password: String, @RequestParam role: String): User? {
+    fun updateUser(@RequestBody request: CreateUserRequest, @PathVariable id: Long): User {
         val user = userRepository.findById(id).orElseThrow { IllegalArgumentException("Invalid user Id:$id") }
-        val userRole = roleRepository.findByName(role) ?: throw IllegalArgumentException("Invalid role")
-        user.username = username
-        user.password = password
+        val userRole = roleRepository.findByName(request.role) ?: throw IllegalArgumentException("Invalid role")
+        user.username = request.username
+        user.password = request.password
         user.role = userRole
         userRepository.save(user)
         return user

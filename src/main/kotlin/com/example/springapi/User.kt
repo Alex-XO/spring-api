@@ -13,7 +13,14 @@ data class User(
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
-    var role: Role
-) {
-    protected constructor() : this(null, "", "", true, Role())
-}
+    var role: Role,
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val products: List<Product> = mutableListOf()
+)
+
+class CreateUserRequest(
+    val username: String,
+    val password: String,
+    val role: String
+)
