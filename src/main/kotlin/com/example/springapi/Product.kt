@@ -12,7 +12,15 @@ data class Product(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    val user: User
+    val user: User,
+
+    @ManyToMany
+    @JoinTable(
+        name = "product_tag",
+        joinColumns = [JoinColumn(name = "product_id")],
+        inverseJoinColumns = [JoinColumn(name = "tag_id")]
+    )
+    val tags: MutableList<Tag> = mutableListOf()
 )
 
 data class CreateProductRequest(
